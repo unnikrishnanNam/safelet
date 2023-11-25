@@ -16,14 +16,13 @@ class MyCardList extends StatefulWidget {
 
 class _MyCardListState extends State<MyCardList> {
   int currentPage = 0;
-  double scaleX = 0.85;
-  double scaleY = 0.85;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(
-        height: 240,
+        height: 200,
         width: 370,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -52,30 +51,26 @@ class _MyCardListState extends State<MyCardList> {
                         enlargeCenterPage: true),
                     itemCount: details.length,
                     itemBuilder: ((ctx, index, viewIndex) {
-                      return Transform.scale(
-                        scaleX: scaleX,
-                        scaleY: scaleY,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
-                          child: GestureDetector(
-                            onLongPress: () {
-                              carouselController.animateToPage(
-                                currentPage == 0
-                                    ? currentPage + 1
-                                    : currentPage - 1,
-                                curve: Curves.decelerate,
-                                duration: const Duration(milliseconds: 600),
-                              );
-                              print(details[index].id);
-                              removeDetail(details[index].id);
-                            },
-                            child: MyCard(
-                              pageChanged: (_) {},
-                              number: details[index].number,
-                              name: details[index].name,
-                              date: details[index].date,
-                              color: details[index].skin,
-                            ),
+                      return AnimatedSize(
+                        curve: Curves.decelerate,
+                        duration: const Duration(milliseconds: 300),
+                        child: GestureDetector(
+                          onLongPress: () {
+                            carouselController.animateToPage(
+                              currentPage == 0
+                                  ? currentPage + 1
+                                  : currentPage - 1,
+                              curve: Curves.decelerate,
+                              duration: const Duration(milliseconds: 600),
+                            );
+                            removeDetail(details[index].id);
+                          },
+                          child: MyCard(
+                            pageChanged: (_) {},
+                            number: details[index].number,
+                            name: details[index].name,
+                            date: details[index].date,
+                            color: details[index].skin,
                           ),
                         ),
                       );
@@ -83,7 +78,7 @@ class _MyCardListState extends State<MyCardList> {
                   )
                 : Image.asset(
                     'images/card-payment.png',
-                    color: Colors.grey.shade500,
+                    color: Colors.grey.shade400,
                   );
           },
         ),

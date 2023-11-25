@@ -3,14 +3,14 @@ import 'package:safelet/db/db_functions.dart';
 
 typedef IntCallback = void Function(int skin);
 
-class MyCard extends StatelessWidget {
+class MyCard extends StatefulWidget {
   final IntCallback pageChanged;
   MyCard(
       {Key? key,
       this.name = 'unnikrishnan',
       this.date = '02/24',
       this.number = 'XXXX XXXX XXXX XXXX',
-      this.color = 1,
+      this.color = 0,
       this.selectMode = false,
       required this.pageChanged,
       this.shadowOffset = 10})
@@ -25,44 +25,41 @@ class MyCard extends StatelessWidget {
   final int color;
   final bool selectMode;
 
+  @override
+  State<MyCard> createState() => _MyCardState();
+}
+
+class _MyCardState extends State<MyCard> {
   final PageController _viewController = PageController();
-  static int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 3.2 * scaleFactor,
-        height: 2 * scaleFactor,
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              color: Colors.grey,
-              offset: Offset(shadowOffset, shadowOffset),
-              blurRadius: 5,
-              spreadRadius: 0),
-          BoxShadow(
-              color: Colors.white.withAlpha(90),
-              offset: Offset(-shadowOffset, -shadowOffset),
-              blurRadius: 5,
-              spreadRadius: 0),
-        ], borderRadius: const BorderRadius.all(Radius.circular(borderRad))),
+        width: 3.2 * MyCard.scaleFactor,
+        height: 2 * MyCard.scaleFactor,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(MyCard.borderRad))),
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
         child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(borderRad)),
+          borderRadius:
+              const BorderRadius.all(Radius.circular(MyCard.borderRad)),
           child: Stack(children: [
             PageView.builder(
               onPageChanged: (index) {
-                currentPage = index;
-                pageChanged(index);
+                widget.pageChanged(index);
               },
               controller: _viewController,
-              physics: selectMode ? null : const NeverScrollableScrollPhysics(),
+              physics: widget.selectMode
+                  ? null
+                  : const NeverScrollableScrollPhysics(),
               itemCount: skins.length,
               itemBuilder: (context, index) {
                 return Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                        colors: skins[selectMode ? index : color].color,
+                        colors: skins[widget.selectMode ? index : widget.color]
+                            .color,
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight),
                   ),
@@ -112,7 +109,7 @@ class MyCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    number,
+                    widget.number,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -135,7 +132,7 @@ class MyCard extends StatelessWidget {
                                 letterSpacing: 2),
                           ),
                           Text(
-                            date,
+                            widget.date,
                             style: const TextStyle(
                                 letterSpacing: 2,
                                 color: Colors.white,
@@ -154,7 +151,7 @@ class MyCard extends StatelessWidget {
                                 fontSize: 10),
                           ),
                           Text(
-                            name.toUpperCase(),
+                            widget.name.toUpperCase(),
                             style: const TextStyle(
                                 letterSpacing: 2,
                                 color: Colors.white,
